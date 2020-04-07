@@ -21,8 +21,11 @@
             value="skip-musclesoreness">Skipped: Muscle Soreness</button>
         <button type="button" class="btn btn-primary skip-lazy" data-toggle="button" aria-pressed="false"
             value="skip-lazy">Skipped: Lazy</button>
+        
+            
     </div>
 
+    <div id="timeOfDay-buttons"></div>
     <!-- Bootstrap link-->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
@@ -45,28 +48,37 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
 
     <script>
-        //1. Display today's date on the page
+        //1. Display today's date on the page and update each minute
+        function refreshTime() {
         var todaysDate = moment().format();
         console.log(todaysDate);
-        $("#display-todays-date").append(todaysDate);
+        $("#display-todays-date").html(todaysDate);
+        };
+
+        refreshTime();
+        // QUESTION: Is this not good pracice? I'm weary of this code running every second. 
+        //           What is the most efficient way to do this?
+        setInterval(function(){refreshTime()},10000);
 
         //2. If workout button is clicked, the time of the day buttons display 
-
-        // this should be made into a function 
         $(".workout").on("click", function () {
 
             var buttonNames = ["Morning", "Afternoon", "Evening", "Late Night"]; 
 
-            var newDiv = $("<div>");
-            newDiv.attr("id", 'timeOfDay-buttons');
-            $("#display-buttons").append(newDiv);
-
-            for (var i = 0; buttonNames.length; i++) {
+            for (var i = 0; i < buttonNames.length; i++) {
 
             var newButton = $("<button>");
-                newButton.attr("id",timeOfDay);
-                newButton.attr("value",buttonNames[i]);
-                $("#timeOfDay-buttons").append("<br></br>", newButton);
+            // the new buttons should have similar attributes as the main buttons so that
+            // when the buttons are clicked, they remain pressed. Tryign to re-use bootstrap
+                newButton.attr("type","button");
+                newButton.attr("class","timeOfDay btn btn-primary");
+                newButton.attr("id",buttonNames[i]);
+                newButton.attr("data-toggle","button");
+                newButton.attr( {value: buttonNames[i], 'aria-pressed':"false"} );
+                console.log(buttonNames[i]);
+
+                $("#timeOfDay-buttons").append(newButton);
+                newButton.text(buttonNames[i]);
             };
 
         });
