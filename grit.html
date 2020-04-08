@@ -111,13 +111,14 @@
                 muscleSoreDays: clickMuscleSore,
                 lazyDays: clickLazy
 
-
             });
         });
 
         $("#skip-musclesoreness").on("click", function () {
             clickMuscleSore = clickMuscleSore + 1;
             console.log("number of muscle sore clicks: " + clickMuscleSore);
+            $("#timeOfDay-buttons").empty();
+
 
             firebase.database().ref().set({
                 workoutDays: clickWorkout,
@@ -129,6 +130,7 @@
         $("#skip-lazy").on("click", function () {
             clickLazy = clickLazy + 1;
             console.log("number of lazy clicks: " + clickLazy);
+            $("#timeOfDay-buttons").empty();
 
             firebase.database().ref().set({
                 workoutDays: clickWorkout,
