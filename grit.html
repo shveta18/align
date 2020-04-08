@@ -107,7 +107,10 @@
             console.log("number of workout clicks: " + clickWorkout);
 
             firebase.database().ref().set({
-                workoutDays: clickWorkout
+                workoutDays: clickWorkout,
+                muscleSoreDays: clickMuscleSore,
+                lazyDays: clickLazy
+
 
             });
         });
@@ -117,7 +120,9 @@
             console.log("number of muscle sore clicks: " + clickMuscleSore);
 
             firebase.database().ref().set({
-                muscleSoreDays: clickMuscleSore 
+                workoutDays: clickWorkout,
+                muscleSoreDays: clickMuscleSore,
+                lazyDays: clickLazy
             });
         });
 
@@ -126,6 +131,8 @@
             console.log("number of lazy clicks: " + clickLazy);
 
             firebase.database().ref().set({
+                workoutDays: clickWorkout,
+                muscleSoreDays: clickMuscleSore,
                 lazyDays: clickLazy
             });
         });
