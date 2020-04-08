@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-    <title>Grit</title>
+    
+    <title>Align</title>
 
 </head>
 
@@ -15,14 +15,14 @@
     <div id="display-todays-date"></div>
 
     <div id="display-buttons">
-        <button type="button" class="btn btn-primary workout" data-toggle="button" aria-pressed="false"
+        <button type="button" class="btn btn-primary" id="workout" data-toggle="button" aria-pressed="false"
             value="workout">Workout</button>
-        <button type="button" class="btn btn-primary skip-musclesoreness" data-toggle="button" aria-pressed="false"
+        <button type="button" class="btn btn-primary" id="skip-musclesoreness" data-toggle="button" aria-pressed="false"
             value="skip-musclesoreness">Skipped: Muscle Soreness</button>
-        <button type="button" class="btn btn-primary skip-lazy" data-toggle="button" aria-pressed="false"
+        <button type="button" class="btn btn-primary" id="skip-lazy" data-toggle="button" aria-pressed="false"
             value="skip-lazy">Skipped: Lazy</button>
-        
-            
+
+
     </div>
 
     <div id="timeOfDay-buttons"></div>
@@ -46,35 +46,36 @@
     <!-- link to Moments-->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
-
+    <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-database.js"></script>
     <script>
         //1. Display today's date on the page and update each minute
         function refreshTime() {
-        var todaysDate = moment().format();
-        console.log(todaysDate);
-        $("#display-todays-date").html(todaysDate);
+            var todaysDate = moment().format();
+            //console.log(todaysDate);
+            $("#display-todays-date").html(todaysDate);
         };
 
         refreshTime();
-        // QUESTION: Is this not good pracice? I'm weary of this code running every second. 
-        //           What is the most efficient way to do this?
-        setInterval(function(){refreshTime()},10000);
+        // QUESTION: Is this not good pracice? I'm weary of this code running every 10 seconds. 
+        //           What is the most efficient way to do this? Goal = get accurate time
+        setInterval(function () { refreshTime() }, 10000);
 
         //2. If workout button is clicked, the time of the day buttons display 
-        $(".workout").on("click", function () {
+        $("#workout").on("click", function () {
 
-            var buttonNames = ["Morning", "Afternoon", "Evening", "Late Night"]; 
+            var buttonNames = ["Morning", "Afternoon", "Evening", "Late Night"];
 
             for (var i = 0; i < buttonNames.length; i++) {
 
-            var newButton = $("<button>");
-            // the new buttons should have similar attributes as the main buttons so that
-            // when the buttons are clicked, they remain pressed. Tryign to re-use bootstrap
-                newButton.attr("type","button");
-                newButton.attr("class","timeOfDay btn btn-primary");
-                newButton.attr("id",buttonNames[i]);
-                newButton.attr("data-toggle","button");
-                newButton.attr( {value: buttonNames[i], 'aria-pressed':"false"} );
+                var newButton = $("<button>");
+                // the new buttons should have similar attributes as the main buttons so that
+                // when the buttons are clicked, they remain pressed. Tryign to re-use bootstrap
+                newButton.attr("type", "button");
+                newButton.attr("class", "timeOfDay btn btn-primary");
+                newButton.attr("id", buttonNames[i]);
+                newButton.attr("data-toggle", "button");
+                newButton.attr({ value: buttonNames[i], 'aria-pressed': "false" });
                 console.log(buttonNames[i]);
 
                 $("#timeOfDay-buttons").append(newButton);
@@ -83,7 +84,56 @@
 
         });
 
-        
+        var firebaseConfig = {
+            apiKey: "AIzaSyA6KPfNXqtMU0Xb8zJxuk7XpOVqZiuaIIE",
+            authDomain: "project-align.firebaseapp.com",
+            databaseURL: "https://project-align.firebaseio.com",
+            projectId: "project-align",
+            storageBucket: "project-align.appspot.com",
+            messagingSenderId: "992009557306",
+            appId: "1:992009557306:web:ece9a9460a4b8f5403ec03"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+
+        // create variables to store the number of instances when a button was clicked
+        var clickWorkout = 0;
+        var clickLazy = 0;
+        var clickMuscleSore = 0;
+
+        $("#workout").on("click", function () {
+            clickWorkout = clickWorkout + 1;
+            console.log("number of workout clicks: " + clickWorkout);
+
+            firebase.database().ref().set({
+                workoutDays: clickWorkout
+
+            });
+        });
+
+        $("#skip-musclesoreness").on("click", function () {
+            clickMuscleSore = clickMuscleSore + 1;
+            console.log("number of muscle sore clicks: " + clickMuscleSore);
+
+            firebase.database().ref().set({
+                muscleSoreDays: clickMuscleSore 
+            });
+        });
+
+        $("#skip-lazy").on("click", function () {
+            clickLazy = clickLazy + 1;
+            console.log("number of lazy clicks: " + clickLazy);
+
+            firebase.database().ref().set({
+                lazyDays: clickLazy
+            });
+        });
+
+        //3. Create search button to search youtube and populate the first youtube video under 10min. 
+
+
+
 
 
     </script>
