@@ -6,13 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    
+
     <title>Align</title>
 
 </head>
 
 <body>
-    <div id="display-todays-date"></div>
+    <div> <button class="back-date">Back</button>
+        <div id="display-todays-date"></div><button class="forward-date">Forward</button>
+    </div>
 
     <div id="display-buttons">
         <button type="button" class="btn btn-primary" id="workout" data-toggle="button" aria-pressed="false"
@@ -51,23 +53,44 @@
     <script>
         //1. Display today's date on the page and update each minute
         function refreshTime() {
-            var todaysDate = moment().format();
-            //console.log(todaysDate);
+            var todaysDate = moment().format("DD-MMMM-YYYY");
             $("#display-todays-date").html(todaysDate);
         };
-
         refreshTime();
-        // QUESTION: Is this not good pracice? I'm weary of this code running every 10 seconds. 
-        //           What is the most efficient way to do this? Goal = get accurate time
         setInterval(function () { refreshTime() }, 10000);
 
-        //2. If workout button is clicked, the time of the day buttons display 
+        var currentDate = moment();
+
+        $(".back-date").on("click", function () {
+            
+            function getBackDate() {
+                var backDate = currentDate.subtract(1, 'days').format("DD-MMMM-YYYY");
+                var updatedcurrentDate = backDate;
+                console.log("back date: " + backDate);
+                $("#display-todays-date").html(backDate);
+                console.log("The current date is: " + updatedcurrentDate);
+            };
+            getBackDate();
+
+        });
+
+        $(".forward-date").on("click", function () {
+            
+            function getForwardDate() {
+                var forwardDate = currentDate.add(1, 'days').format("DD-MMMM-YYYY");
+                var updatedcurrentDate = forwardDate;
+                console.log("forward date: " + forwardDate);
+                $("#display-todays-date").html(forwardDate);
+                console.log("The current date is: " + updatedcurrentDate);
+            };
+            getForwardDate();
+
+        });
+
+        //2. If "Workout" button is clicked, the time of the day buttons display 
         $("#workout").on("click", function () {
-
             var buttonNames = ["Morning", "Afternoon", "Evening", "Late Night"];
-
             for (var i = 0; i < buttonNames.length; i++) {
-
                 var newButton = $("<button>");
                 // the new buttons should have similar attributes as the main buttons so that
                 // when the buttons are clicked, they remain pressed. Tryign to re-use bootstrap
@@ -95,22 +118,33 @@
         };
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
+        console.log(firebaseConfig);
 
 
         // create variables to store the number of instances when a button was clicked
         var clickWorkout = 0;
         var clickLazy = 0;
         var clickMuscleSore = 0;
+        var date = moment().format();
+        var clickTimeOfDay = "";
 
         $("#workout").on("click", function () {
             clickWorkout = clickWorkout + 1;
             console.log("number of workout clicks: " + clickWorkout);
+            $("#skip-musclesoreness").attr("aria-pressed", "false").removeClass("active");
+            $("#skip-lazy").attr({ 'aria-pressed': "false" }).removeClass("active");
 
-            firebase.database().ref().set({
-                workoutDays: clickWorkout,
-                muscleSoreDays: clickMuscleSore,
-                lazyDays: clickLazy
+            $(".timeOfDay").on("click", function () {
+                clickTimeOfDay = $(this).val();
+                console.log("the time of day clickd is: " + clickTimeOfDay);
 
+                firebase.database().ref().push({
+                    workoutDays: clickWorkout,
+                    muscleSoreDays: clickMuscleSore,
+                    lazyDays: clickLazy,
+                    date: date,
+                    timeOfDay: clickTimeOfDay
+                });
             });
         });
 
@@ -118,12 +152,16 @@
             clickMuscleSore = clickMuscleSore + 1;
             console.log("number of muscle sore clicks: " + clickMuscleSore);
             $("#timeOfDay-buttons").empty();
+            $("#workout").attr("aria-pressed", false).removeClass("active");
+            $("#skip-lazy").attr("aria-pressed", false).removeClass("active");
 
 
-            firebase.database().ref().set({
+
+            firebase.database().ref().push({
                 workoutDays: clickWorkout,
                 muscleSoreDays: clickMuscleSore,
-                lazyDays: clickLazy
+                lazyDays: clickLazy,
+                date: date
             });
         });
 
@@ -131,15 +169,37 @@
             clickLazy = clickLazy + 1;
             console.log("number of lazy clicks: " + clickLazy);
             $("#timeOfDay-buttons").empty();
+            $("#skip-musclesoreness").attr("aria-pressed", false).removeClass("active");
+            $("#workout").attr("aria-pressed", false).removeClass("active");
 
-            firebase.database().ref().set({
+            firebase.database().ref().push({
                 workoutDays: clickWorkout,
                 muscleSoreDays: clickMuscleSore,
-                lazyDays: clickLazy
+                lazyDays: clickLazy,
+                date: date
             });
         });
 
-        //3. Create search button to search youtube and populate the first youtube video under 10min. 
+
+
+
+        // on reload of the page the selection should be retained. 
+
+        //QUESTION: How can I pull the selection that was saved ? 
+        //$(window).unload(function () {
+            //console.log("you refreshed the page");
+
+           /// var storedWorkoutDays = database.ref('workoutDays');
+           // storedWorkoutDays.on('value')
+
+            // write code for pulling the selections
+            // for this date, check if any entries exist
+            // if yes, then whatever values are stored as = 1, populate the button press 'class = active and aria-press = true' 
+            // where date = this date
+            // else, leave blank.
+
+        //});
+        //3. Create search button to search youtube and populate the first youtube video under 10min.
 
 
 
