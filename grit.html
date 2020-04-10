@@ -53,13 +53,29 @@
     <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-database.js"></script>
     <script>
-        //1. Display today's date on the page and update each minute
+        //1. Display today's date on the page
         function refreshTime() {
             var todaysDate = moment().format("DD-MMMM-YYYY");
             $("#display-todays-date").html(todaysDate);
         };
         refreshTime();
+        
+        // clear out all selections on the buttons 
+        function clearSelections() {
+            $("#workout").attr("aria-pressed", "false").removeClass("active");
+            $("#skip-lazy").attr({ 'aria-pressed': "false" }).removeClass("active");
+            $("#skip-musclesoreness").attr("aria-pressed", "false").removeClass("active");
+            $("#timeOfDay-buttons").empty()
 
+        };
+        // clear out all stored data in firebase
+        function resetData() {
+            clickWorkout = false;
+            clickMuscleSore = false;
+            clickLazy = false;
+            clickTimeOfDay = "";
+
+        };
 
         var firebaseConfig = {
             apiKey: "AIzaSyA6KPfNXqtMU0Xb8zJxuk7XpOVqZiuaIIE",
@@ -72,22 +88,27 @@
         };
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
+        var storedInFirebase = firebase.database();
         console.log(firebaseConfig);
 
 
         // create variables to store the number of instances when a button was clicked
-        var clickWorkout = 0;
-        var clickLazy = 0;
-        var clickMuscleSore = 0;
+        var clickWorkout = false;
+        var clickLazy = false;
+        var clickMuscleSore = false;
         var date = $("#display-todays-date").text(); // grab the value of the date from what is populated on the page
         var clickTimeOfDay = "";
 
         //setInterval(function () { refreshTime() }, 10000);
 
-        // 2. If user wants, they can click to toggle back and forth 
-        // between today's date and the future date.
-        var currentDate = moment();
+        // check if data exists for the current date
+        var checkData = firebase.database().ref(date);
+        checkData.on('value', function (snapshot) {
+            console.log(snapshot.val());
+        });
 
+        // if the user wants, they can toggle  back and forth between dates
+        var currentDate = moment();
         $(".back-date").on("click", function () {
             function getBackDate() {
                 var backDate = currentDate.subtract(1, 'days').format("DD-MMMM-YYYY");
@@ -96,9 +117,9 @@
                 date = backDate;
             };
             getBackDate();
-
+            clearSelections();
         });
-
+        
         $(".forward-date").on("click", function () {
             function getForwardDate() {
                 var forwardDate = currentDate.add(1, 'days').format("DD-MMMM-YYYY");
@@ -107,10 +128,10 @@
                 date = forwardDate;
             };
             getForwardDate();
-
+            clearSelections();
         });
 
-        //2. If "Workout" button is clicked, the time of the day buttons display 
+        //If "Workout" button is clicked, the time of the day buttons display 
         $("#workout").on("click", function () {
             var buttonNames = ["Morning", "Afternoon", "Evening", "Late Night"];
             for (var i = 0; i < buttonNames.length; i++) {
@@ -130,9 +151,10 @@
 
         });
 
-
+// click event for workout days
         $("#workout").on("click", function () {
-            clickWorkout = clickWorkout + 1;
+            resetData();
+            clickWorkout = true;
             console.log("number of workout clicks: " + clickWorkout);
             $("#skip-musclesoreness").attr("aria-pressed", "false").removeClass("active");
             $("#skip-lazy").attr({ 'aria-pressed': "false" }).removeClass("active");
@@ -143,67 +165,48 @@
                 console.log("record date value is:" + date);
 
 
-                firebase.database().ref().push({
+                firebase.database().ref(date).set({
                     workoutDays: clickWorkout,
                     muscleSoreDays: clickMuscleSore,
                     lazyDays: clickLazy,
-                    recordDate: date,
+                    // recordDate: date,
                     timeOfDay: clickTimeOfDay
                 });
             });
         });
-
+// click event for muscle sore days
         $("#skip-musclesoreness").on("click", function () {
-            clickMuscleSore = clickMuscleSore + 1;
+            resetData();
+            clickMuscleSore = true;
             console.log("number of muscle sore clicks: " + clickMuscleSore);
             $("#timeOfDay-buttons").empty();
             $("#workout").attr("aria-pressed", false).removeClass("active");
             $("#skip-lazy").attr("aria-pressed", false).removeClass("active");
-
-
-
-            firebase.database().ref().push({
+            firebase.database().ref(date).set({
                 workoutDays: clickWorkout,
                 muscleSoreDays: clickMuscleSore,
                 lazyDays: clickLazy,
-                recordDate: date
+                //recordDate: date
             });
-        });
 
+        });
+// click event for lazy days
         $("#skip-lazy").on("click", function () {
-            clickLazy = clickLazy + 1;
+            resetData();
+            clickLazy = true;
             console.log("number of lazy clicks: " + clickLazy);
             $("#timeOfDay-buttons").empty();
             $("#skip-musclesoreness").attr("aria-pressed", false).removeClass("active");
             $("#workout").attr("aria-pressed", false).removeClass("active");
-
-            firebase.database().ref().push({
+            firebase.database().ref(date).set({
                 workoutDays: clickWorkout,
                 muscleSoreDays: clickMuscleSore,
                 lazyDays: clickLazy,
-                recordDate: date
+                //recordDate: date
             });
         });
 
 
-
-
-        // on reload of the page the selection should be retained. 
-
-        //QUESTION: How can I pull the selection that was saved ? 
-        //$(window).unload(function () {
-            //console.log("you refreshed the page");
-
-           /// var storedWorkoutDays = database.ref('workoutDays');
-           // storedWorkoutDays.on('value')
-
-            // write code for pulling the selections
-            // for this date, check if any entries exist
-            // if yes, then whatever values are stored as = 1, populate the button press 'class = active and aria-press = true' 
-            // where date = this date
-            // else, leave blank.
-
-        //});
         //3. Create search button to search youtube and populate the first youtube video under 10min.
 
 
