@@ -12,11 +12,13 @@
 </head>
 
 <body>
-    <div> <button class="back-date">Back</button>
-        <div id="display-todays-date"></div><button class="forward-date">Forward</button>
+    <div class="container">
+        <button class="back-date">Back</button>
+        <div id="display-todays-date"></div>
+        <button class="forward-date">Forward</button>
     </div>
 
-    <div id="display-buttons">
+    <div class="container" id="display-buttons">
         <button type="button" class="btn btn-primary" id="workout" data-toggle="button" aria-pressed="false"
             value="workout">Workout</button>
         <button type="button" class="btn btn-primary" id="skip-musclesoreness" data-toggle="button" aria-pressed="false"
@@ -57,31 +59,52 @@
             $("#display-todays-date").html(todaysDate);
         };
         refreshTime();
-        setInterval(function () { refreshTime() }, 10000);
 
+
+        var firebaseConfig = {
+            apiKey: "AIzaSyA6KPfNXqtMU0Xb8zJxuk7XpOVqZiuaIIE",
+            authDomain: "project-align.firebaseapp.com",
+            databaseURL: "https://project-align.firebaseio.com",
+            projectId: "project-align",
+            storageBucket: "project-align.appspot.com",
+            messagingSenderId: "992009557306",
+            appId: "1:992009557306:web:ece9a9460a4b8f5403ec03"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        console.log(firebaseConfig);
+
+
+        // create variables to store the number of instances when a button was clicked
+        var clickWorkout = 0;
+        var clickLazy = 0;
+        var clickMuscleSore = 0;
+        var date = $("#display-todays-date").text(); // grab the value of the date from what is populated on the page
+        var clickTimeOfDay = "";
+
+        //setInterval(function () { refreshTime() }, 10000);
+
+        // 2. If user wants, they can click to toggle back and forth 
+        // between today's date and the future date.
         var currentDate = moment();
 
         $(".back-date").on("click", function () {
-            
             function getBackDate() {
                 var backDate = currentDate.subtract(1, 'days').format("DD-MMMM-YYYY");
-                var updatedcurrentDate = backDate;
                 console.log("back date: " + backDate);
                 $("#display-todays-date").html(backDate);
-                console.log("The current date is: " + updatedcurrentDate);
+                date = backDate;
             };
             getBackDate();
 
         });
 
         $(".forward-date").on("click", function () {
-            
             function getForwardDate() {
                 var forwardDate = currentDate.add(1, 'days').format("DD-MMMM-YYYY");
-                var updatedcurrentDate = forwardDate;
                 console.log("forward date: " + forwardDate);
                 $("#display-todays-date").html(forwardDate);
-                console.log("The current date is: " + updatedcurrentDate);
+                date = forwardDate;
             };
             getForwardDate();
 
@@ -107,26 +130,6 @@
 
         });
 
-        var firebaseConfig = {
-            apiKey: "AIzaSyA6KPfNXqtMU0Xb8zJxuk7XpOVqZiuaIIE",
-            authDomain: "project-align.firebaseapp.com",
-            databaseURL: "https://project-align.firebaseio.com",
-            projectId: "project-align",
-            storageBucket: "project-align.appspot.com",
-            messagingSenderId: "992009557306",
-            appId: "1:992009557306:web:ece9a9460a4b8f5403ec03"
-        };
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        console.log(firebaseConfig);
-
-
-        // create variables to store the number of instances when a button was clicked
-        var clickWorkout = 0;
-        var clickLazy = 0;
-        var clickMuscleSore = 0;
-        var date = moment().format();
-        var clickTimeOfDay = "";
 
         $("#workout").on("click", function () {
             clickWorkout = clickWorkout + 1;
@@ -137,12 +140,14 @@
             $(".timeOfDay").on("click", function () {
                 clickTimeOfDay = $(this).val();
                 console.log("the time of day clickd is: " + clickTimeOfDay);
+                console.log("record date value is:" + date);
+
 
                 firebase.database().ref().push({
                     workoutDays: clickWorkout,
                     muscleSoreDays: clickMuscleSore,
                     lazyDays: clickLazy,
-                    date: date,
+                    recordDate: date,
                     timeOfDay: clickTimeOfDay
                 });
             });
@@ -161,7 +166,7 @@
                 workoutDays: clickWorkout,
                 muscleSoreDays: clickMuscleSore,
                 lazyDays: clickLazy,
-                date: date
+                recordDate: date
             });
         });
 
@@ -176,7 +181,7 @@
                 workoutDays: clickWorkout,
                 muscleSoreDays: clickMuscleSore,
                 lazyDays: clickLazy,
-                date: date
+                recordDate: date
             });
         });
 
