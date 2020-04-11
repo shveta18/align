@@ -121,6 +121,7 @@
             var checkData = firebase.database().ref(date);
 
             checkData.on('value', function (snapshot) {
+                console.log("blahlal");
                 clearSelections();
                 console.log(snapshot.val());
                 dataReturned = snapshot.val();
@@ -131,6 +132,8 @@
                     if (dataReturned.workoutDays === true) {
                         console.log("workout recorded for this date");
                         $("#workout").attr("aria-pressed", "true").addClass("active");
+                        $("#timeOfDay-buttons").css("display", "block");
+
 
                         //  $("#timeOfDay-buttons").empty()
                     }
@@ -171,7 +174,6 @@
                 date = backDate;
             };
             getBackDate();
-
             pullFromDb();
         });
 
@@ -183,7 +185,6 @@
                 date = forwardDate;
             };
             getForwardDate();
-
             pullFromDb();
         });
 
@@ -191,18 +192,16 @@
         // click event for workout days
         $("#workout").on("click", function () {
             resetData();
+            clearSelections();
             clickWorkout = true;
             console.log("number of workout clicks: " + clickWorkout);
-            $("#skip-musclesoreness").attr("aria-pressed", "false").removeClass("active");
-            $("#skip-lazy").attr({ 'aria-pressed': "false" }).removeClass("active");
+           
 
             $("#timeOfDay-buttons").css("display", "block");
             $(".timeOfDay").on("click", function () {
                 clickTimeOfDay = $(this).val();
                 console.log("the time of day clickd is: " + clickTimeOfDay);
                 console.log("record date value is:" + date);
-
-
                 firebase.database().ref(date).set({
                     workoutDays: clickWorkout,
                     muscleSoreDays: clickMuscleSore,
@@ -215,11 +214,11 @@
         // click event for muscle sore days
         $("#skip-musclesoreness").on("click", function () {
             resetData();
+            clearSelections();
             clickMuscleSore = true;
             console.log("number of muscle sore clicks: " + clickMuscleSore);
-            $("#timeOfDay-buttons").empty();
-            $("#workout").attr("aria-pressed", false).removeClass("active");
-            $("#skip-lazy").attr("aria-pressed", false).removeClass("active");
+            
+           
             firebase.database().ref(date).set({
                 workoutDays: clickWorkout,
                 muscleSoreDays: clickMuscleSore,
@@ -231,11 +230,11 @@
         // click event for lazy days
         $("#skip-lazy").on("click", function () {
             resetData();
+            clearSelections();
             clickLazy = true;
             console.log("number of lazy clicks: " + clickLazy);
-            $("#timeOfDay-buttons").empty();
-            $("#skip-musclesoreness").attr("aria-pressed", false).removeClass("active");
-            $("#workout").attr("aria-pressed", false).removeClass("active");
+           
+            
             firebase.database().ref(date).set({
                 workoutDays: clickWorkout,
                 muscleSoreDays: clickMuscleSore,
