@@ -90,6 +90,9 @@
 
         };
 
+        function resetTimeOfDay(){
+            $(".timeOfDay").attr("aria-pressed", "false").removeClass("active");
+        };
 
 
         var firebaseConfig = {
@@ -196,10 +199,12 @@
             clickWorkout = true;
             console.log("number of workout clicks: " + clickWorkout);
            
-
+            
             $("#timeOfDay-buttons").css("display", "block");
             $(".timeOfDay").on("click", function () {
+                resetTimeOfDay();
                 clickTimeOfDay = $(this).val();
+                
                 console.log("the time of day clickd is: " + clickTimeOfDay);
                 console.log("record date value is:" + date);
                 firebase.database().ref(date).set({
