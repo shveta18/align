@@ -29,7 +29,19 @@
 
     </div>
 
-    <div id="timeOfDay-buttons"></div>
+    <div id="timeOfDay-buttons" style="display: none;">
+        <button type="button" class="timeOfDay btn btn-primary" id="Morning" data-toggle="button" value="Morning"
+            aria-pressed="false">Morning</button>
+
+        <button type="button" class="timeOfDay btn btn-primary" id="Afternoon" data-toggle="button" value="Afternoon"
+            aria-pressed="false">Afternoon</button>
+
+        <button type="button" class="timeOfDay btn btn-primary" id="Evening" data-toggle="button" value="Evening"
+            aria-pressed="false">Evening</button>
+
+        <button type="button" class="timeOfDay btn btn-primary" id="Late Night" data-toggle="button" value="Late Night"
+            aria-pressed="false">Late Night</button>
+    </div>
     <!-- Bootstrap link-->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
@@ -59,13 +71,14 @@
             $("#display-todays-date").html(todaysDate);
         };
         refreshTime();
-        
+
+
         // clear out all selections on the buttons 
         function clearSelections() {
             $("#workout").attr("aria-pressed", "false").removeClass("active");
             $("#skip-lazy").attr({ 'aria-pressed': "false" }).removeClass("active");
             $("#skip-musclesoreness").attr("aria-pressed", "false").removeClass("active");
-            $("#timeOfDay-buttons").empty()
+            $("#timeOfDay-buttons").css("display", "none");
 
         };
         // clear out all stored data in firebase
@@ -76,6 +89,8 @@
             clickTimeOfDay = "";
 
         };
+
+
 
         var firebaseConfig = {
             apiKey: "AIzaSyA6KPfNXqtMU0Xb8zJxuk7XpOVqZiuaIIE",
@@ -100,12 +115,51 @@
         var clickTimeOfDay = "";
 
         //setInterval(function () { refreshTime() }, 10000);
+        // grab the existing data from firebase for a particular date
+        function pullFromDb() {
+            // check if data exists for the current date
+            var checkData = firebase.database().ref(date);
 
-        // check if data exists for the current date
-        var checkData = firebase.database().ref(date);
-        checkData.on('value', function (snapshot) {
-            console.log(snapshot.val());
-        });
+            checkData.on('value', function (snapshot) {
+                clearSelections();
+                console.log(snapshot.val());
+                dataReturned = snapshot.val();
+
+                if (dataReturned != null) {
+                    console.log("Okay something exists for this date");
+
+                    if (dataReturned.workoutDays === true) {
+                        console.log("workout recorded for this date");
+                        $("#workout").attr("aria-pressed", "true").addClass("active");
+
+                        //  $("#timeOfDay-buttons").empty()
+                    }
+
+                    else if (dataReturned.muscleSoreDays === true) {
+                        console.log("muscles sore recorded for this date");
+
+                        $("#skip-musclesoreness").attr("aria-pressed", "true").addClass("active");
+                    }
+
+                    else if (dataReturned.lazyDays === true) {
+                        console.log("lazy day recorded for this date");
+                        $("#skip-lazy").attr({ 'aria-pressed': "true" }).addClass("active");
+                    }
+                    else {
+                        console.log("None clicked");
+                    }
+
+                }
+                else {
+                    console.log("No data stored for this date.");
+                }
+            });
+
+
+        };
+
+        pullFromDb();
+
 
         // if the user wants, they can toggle  back and forth between dates
         var currentDate = moment();
@@ -117,9 +171,10 @@
                 date = backDate;
             };
             getBackDate();
-            clearSelections();
+
+            pullFromDb();
         });
-        
+
         $(".forward-date").on("click", function () {
             function getForwardDate() {
                 var forwardDate = currentDate.add(1, 'days').format("DD-MMMM-YYYY");
@@ -128,30 +183,12 @@
                 date = forwardDate;
             };
             getForwardDate();
-            clearSelections();
+
+            pullFromDb();
         });
 
-        //If "Workout" button is clicked, the time of the day buttons display 
-        $("#workout").on("click", function () {
-            var buttonNames = ["Morning", "Afternoon", "Evening", "Late Night"];
-            for (var i = 0; i < buttonNames.length; i++) {
-                var newButton = $("<button>");
-                // the new buttons should have similar attributes as the main buttons so that
-                // when the buttons are clicked, they remain pressed. Tryign to re-use bootstrap
-                newButton.attr("type", "button");
-                newButton.attr("class", "timeOfDay btn btn-primary");
-                newButton.attr("id", buttonNames[i]);
-                newButton.attr("data-toggle", "button");
-                newButton.attr({ value: buttonNames[i], 'aria-pressed': "false" });
-                console.log(buttonNames[i]);
 
-                $("#timeOfDay-buttons").append(newButton);
-                newButton.text(buttonNames[i]);
-            };
-
-        });
-
-// click event for workout days
+        // click event for workout days
         $("#workout").on("click", function () {
             resetData();
             clickWorkout = true;
@@ -159,6 +196,7 @@
             $("#skip-musclesoreness").attr("aria-pressed", "false").removeClass("active");
             $("#skip-lazy").attr({ 'aria-pressed': "false" }).removeClass("active");
 
+            $("#timeOfDay-buttons").css("display", "block");
             $(".timeOfDay").on("click", function () {
                 clickTimeOfDay = $(this).val();
                 console.log("the time of day clickd is: " + clickTimeOfDay);
@@ -174,7 +212,7 @@
                 });
             });
         });
-// click event for muscle sore days
+        // click event for muscle sore days
         $("#skip-musclesoreness").on("click", function () {
             resetData();
             clickMuscleSore = true;
@@ -190,7 +228,7 @@
             });
 
         });
-// click event for lazy days
+        // click event for lazy days
         $("#skip-lazy").on("click", function () {
             resetData();
             clickLazy = true;
