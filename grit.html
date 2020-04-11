@@ -30,16 +30,16 @@
     </div>
 
     <div id="timeOfDay-buttons" style="display: none;">
-        <button type="button" class="timeOfDay btn btn-primary" id="Morning" data-toggle="button" value="Morning"
+        <button type="button" class="timeOfDay btn btn-primary" id="morning" data-toggle="button" value="Morning"
             aria-pressed="false">Morning</button>
 
-        <button type="button" class="timeOfDay btn btn-primary" id="Afternoon" data-toggle="button" value="Afternoon"
+        <button type="button" class="timeOfDay btn btn-primary" id="afternoon" data-toggle="button" value="Afternoon"
             aria-pressed="false">Afternoon</button>
 
-        <button type="button" class="timeOfDay btn btn-primary" id="Evening" data-toggle="button" value="Evening"
+        <button type="button" class="timeOfDay btn btn-primary" id="evening" data-toggle="button" value="Evening"
             aria-pressed="false">Evening</button>
 
-        <button type="button" class="timeOfDay btn btn-primary" id="Late Night" data-toggle="button" value="Late Night"
+        <button type="button" class="timeOfDay btn btn-primary" id="late-night" data-toggle="button" value="Late Night"
             aria-pressed="false">Late Night</button>
     </div>
     <!-- Bootstrap link-->
@@ -90,7 +90,7 @@
 
         };
 
-        function resetTimeOfDay(){
+        function resetTimeOfDay() {
             $(".timeOfDay").attr("aria-pressed", "false").removeClass("active");
         };
 
@@ -126,6 +126,7 @@
             checkData.on('value', function (snapshot) {
                 console.log("blahlal");
                 clearSelections();
+                resetTimeOfDay();
                 console.log(snapshot.val());
                 dataReturned = snapshot.val();
 
@@ -137,13 +138,36 @@
                         $("#workout").attr("aria-pressed", "true").addClass("active");
                         $("#timeOfDay-buttons").css("display", "block");
 
+                        if (dataReturned.timeOfDay != null) {
+                            if (dataReturned.timeOfDay === "Morning") {
+                                console.log("Morning was selected");
+                                $("#morning").attr("aria-pressed", "true").addClass("active");
 
-                        //  $("#timeOfDay-buttons").empty()
+                            }
+
+                            else if (dataReturned.timeOfDay === "Afternoon") {
+                                console.log("Afternoon was selected");
+                                $("#afternoon").attr("aria-pressed", "true").addClass("active");
+                            }
+
+                            else if (dataReturned.timeOfDay === "Evening") {
+                                console.log("Evening was selected");
+                                $("#evening").attr("aria-pressed", "true").addClass("active");
+                            }
+
+                            else {
+                                console.log("Late night was selected");
+                                $("#late-night").attr("aria-pressed", "true").addClass("active");
+                            }
+
+                        }
+                        else {
+                            console.log("No time of day was selected");
+                        }
                     }
 
                     else if (dataReturned.muscleSoreDays === true) {
                         console.log("muscles sore recorded for this date");
-
                         $("#skip-musclesoreness").attr("aria-pressed", "true").addClass("active");
                     }
 
@@ -154,14 +178,11 @@
                     else {
                         console.log("None clicked");
                     }
-
                 }
                 else {
                     console.log("No data stored for this date.");
                 }
             });
-
-
         };
 
         pullFromDb();
@@ -198,13 +219,14 @@
             clearSelections();
             clickWorkout = true;
             console.log("number of workout clicks: " + clickWorkout);
-           
-            
+
             $("#timeOfDay-buttons").css("display", "block");
+
+
             $(".timeOfDay").on("click", function () {
                 resetTimeOfDay();
                 clickTimeOfDay = $(this).val();
-                
+
                 console.log("the time of day clickd is: " + clickTimeOfDay);
                 console.log("record date value is:" + date);
                 firebase.database().ref(date).set({
@@ -222,8 +244,8 @@
             clearSelections();
             clickMuscleSore = true;
             console.log("number of muscle sore clicks: " + clickMuscleSore);
-            
-           
+
+
             firebase.database().ref(date).set({
                 workoutDays: clickWorkout,
                 muscleSoreDays: clickMuscleSore,
@@ -238,8 +260,8 @@
             clearSelections();
             clickLazy = true;
             console.log("number of lazy clicks: " + clickLazy);
-           
-            
+
+
             firebase.database().ref(date).set({
                 workoutDays: clickWorkout,
                 muscleSoreDays: clickMuscleSore,
