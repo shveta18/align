@@ -54,6 +54,10 @@
         </form>
 
         <div id="qotd"></div>
+
+        <div id="chart-button">
+            <button id="generate-chart">Analyze Data</button>
+        </div>
     </div>
 
     <!-- Bootstrap link-->
@@ -76,13 +80,17 @@
     <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-database.js"></script>
 
     <!-- Link to charts.js-->
-<script src ="https://data.jsdelivr.com/v1/package/npm/chart.js/badge)](https://www.jsdelivr.com/package/npm/chart.js"></script>
+    <canvas id="chart-day-freq"></canvas>
+    <canvas id="chart-date-freq"></canvas>
+    <canvas id="chart-activity"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
 
 
     <!-- Link to javascript file-->
     <script src="assets/grit.js"></script>
-    <script src="assets/chart.js"></script>
-
+   <script src="assets/analytics.js"></script>
+    
 
 
 </body>

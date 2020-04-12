@@ -296,3 +296,4 @@ $.ajax({
     var quote = response.contents.quotes[0].quote;
     $("#qotd").text(quote);
 });
+
