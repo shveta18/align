@@ -255,11 +255,14 @@
                         weight = weightReturned;
                         console.log("weight exists for today already: " + weight);
                         $("#input-weight").val(weight);
-
+                    }
+                    else {
+                        $("#input-weight").val("");
                     }
 
                 } catch (error) {
                     console.log("No weight key in the db exists");
+                    $("#input-weight").val("");
                 }
 
 
