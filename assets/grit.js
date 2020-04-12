@@ -26,7 +26,6 @@ function resetTimeOfDay() {
     $(".timeOfDay").attr("aria-pressed", "false").removeClass("active");
 };
 
-
 var firebaseConfig = {
     apiKey: "AIzaSyA6KPfNXqtMU0Xb8zJxuk7XpOVqZiuaIIE",
     authDomain: "project-align.firebaseapp.com",
@@ -55,7 +54,7 @@ function pullFromDb() {
     // check if data exists for the current date
     var checkData = firebase.database().ref(date);
 
-    checkData.on('value', function (snapshot) {
+    checkData.on('value', function(snapshot) {
         clearSelections();
         resetTimeOfDay();
         dataReturned = snapshot.val();
@@ -72,7 +71,6 @@ function pullFromDb() {
                     if (dataReturned.timeOfDay === "Morning") {
                         console.log("Morning was selected");
                         $("#morning").attr("aria-pressed", "true").addClass("active");
-
                     }
 
                     else if (dataReturned.timeOfDay === "Afternoon") {
@@ -89,7 +87,6 @@ function pullFromDb() {
                         console.log("Late night was selected");
                         $("#late-night").attr("aria-pressed", "true").addClass("active");
                     }
-
                 }
                 else {
                     console.log("No time of day was selected");
