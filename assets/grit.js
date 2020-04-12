@@ -1,7 +1,9 @@
 // Display today's date on the page
 function refreshTime() {
     var todaysDate = moment().format("DD-MMMM-YYYY");
+    var dayOfWeek = moment().format('dddd');
     $("#display-todays-date").html(todaysDate);
+    $("#display-day-of-week").html(dayOfWeek);
 };
 refreshTime();
 
@@ -45,6 +47,7 @@ var clickWorkout = false;
 var clickLazy = false;
 var clickMuscleSore = false;
 var date = $("#display-todays-date").text(); // grab the value of the date from what is populated on the page
+var day = $("#display-day-of-week").text(); // grab value of day from what is populated on the page
 var clickTimeOfDay = "";
 var weight = 0;
 
@@ -120,9 +123,12 @@ var currentDate = moment();
 $(".back-date").on("click", function () {
     function getBackDate() {
         var backDate = currentDate.subtract(1, 'days').format("DD-MMMM-YYYY");
+        var backDay = currentDate.format('dddd');
         console.log("back date: " + backDate);
         $("#display-todays-date").html(backDate);
+        $("#display-day-of-week").html(backDay);
         date = backDate;
+        day = backDay;
     };
     getBackDate();
     pullFromDb();
@@ -132,9 +138,12 @@ $(".back-date").on("click", function () {
 $(".forward-date").on("click", function () {
     function getForwardDate() {
         var forwardDate = currentDate.add(1, 'days').format("DD-MMMM-YYYY");
+        var forwardDay = currentDate.format('dddd');
         console.log("forward date: " + forwardDate);
         $("#display-todays-date").html(forwardDate);
+        $("#display-day-of-week").html(forwardDay);
         date = forwardDate;
+        day = forwardDay;
     };
     getForwardDate();
     pullFromDb();
@@ -185,7 +194,8 @@ $("#workout").on("click", function () {
             muscleSoreDays: clickMuscleSore,
             lazyDays: clickLazy,
             timeOfDay: clickTimeOfDay,
-            weight: weight
+            weight: weight,
+            day: day
         });
     });
 });
@@ -201,6 +211,7 @@ $("#skip-musclesoreness").on("click", function () {
         muscleSoreDays: clickMuscleSore,
         lazyDays: clickLazy,
         timeOfDay: clickTimeOfDay,
+        day: day
     });
 });
 
@@ -215,6 +226,7 @@ $("#skip-lazy").on("click", function () {
         muscleSoreDays: clickMuscleSore,
         lazyDays: clickLazy,
         timeOfDay: clickTimeOfDay,
+        day: day
     });
 });
 
