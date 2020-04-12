@@ -3,6 +3,9 @@
 // Function to pull the data from the database for a given period of time
 var frequencyWO = [0, 0, 0, 0, 0, 0, 0];
 var freqTimeOfdayWO = [0, 0, 0, 0];
+var daysWorkedOut = 0;
+var daysMuscleSore = 0;
+var daysLazy = 0;
 
 function pullDataForCharts() {
     var alldata = firebase.database().ref();
@@ -12,11 +15,13 @@ function pullDataForCharts() {
 
         $.each(dataCharts, function (key, value) {
             console.log(value.day);
+            console.log(value.workoutDays);
             var dayOfweek = value.day;
             var timeOfDay = value.timeOfDay;
 
-            if (value.workoutDays === true) {
+            if (value.workoutDays == true) {
                 if (dayOfweek === "Sunday") {
+                    console.log("Print for Sunday");
                     var oldCount = frequencyWO[0];
                     frequencyWO[0] = oldCount + 1;
                     console.log(frequencyWO);
@@ -45,6 +50,7 @@ function pullDataForCharts() {
                     frequencyWO[6] = oldCount + 1;
                     console.log(frequencyWO);
                 }
+                console.log("workout days recorded");
             }
 
             if (value.workoutDays === true) {
@@ -64,14 +70,30 @@ function pullDataForCharts() {
                 }
             }
 
+            // if (value.workoutDays === true) {
+            //     var oldCount = daysWorkedOut;
+            //     daysWorkedOut = oldCount + 1;
+            //     console.log(daysWorkedOut);
+            // } else if (value.muscleSoreDays === true) {
+            //     var oldCount = daysMuscleSore;
+            //     daysMuscleSore = oldCount + 1;
+            //     console.log(daysMuscleSore);
+            // } else if (value.lazyDays === true) {
+            //     var oldCount = daysLazy;
+            //     daysLazy = oldCount + 1;
+            //     console.log(daysLazy);
+            // }
         });
+    console.log("the total is" + daysWorkedOut);
+    console.log("Freq workout: "+ frequencyWO);
+
     });
 };
 pullDataForCharts();
 
 $("#generate-chart").on("click", function () {
     event.preventDefault();
-
+    console.log("Freq workout: "+ frequencyWO);
     var ctx1 = document.getElementById('chart-day-freq').getContext('2d');
     var chartDayFreq = new Chart(ctx1, {
         // The type of chart we want to create  
@@ -81,7 +103,7 @@ $("#generate-chart").on("click", function () {
         data: {
             labels: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
             datasets: [{
-                label: 'My First dataset',
+                label: 'Days Worked Out',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
                 data: frequencyWO
@@ -92,8 +114,8 @@ $("#generate-chart").on("click", function () {
         options: {}
     });
 
-    var ctx = document.getElementById('chart-date-freq').getContext('2d');
-    var chartTimeFreq = new Chart(ctx, {
+    var ctx2 = document.getElementById('chart-date-freq').getContext('2d');
+    var chartTimeFreq = new Chart(ctx2, {
         // The type of chart we want to create  
         type: 'bar',
 
@@ -101,7 +123,7 @@ $("#generate-chart").on("click", function () {
         data: {
             labels: ['Morning', 'Afternoon', 'Evening', 'Late Night'],
             datasets: [{
-                label: 'My First dataset',
+                label: 'Time of Day Worked Out',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
                 data: freqTimeOfdayWO
@@ -112,5 +134,28 @@ $("#generate-chart").on("click", function () {
         options: {}
     });
 
+    // var ctx3 = document.getElementById('chart-activity').getContext('2d');
+    // var chartTimeFreq = new Chart(ctx3, {
+    //     // The type of chart we want to create  
+    //     type: 'bar',
+
+    //     // The data for our dataset
+    //     data: {
+    //         labels: ['Workout', 'DOMS', 'Lazy'],
+    //         datasets: [{
+    //             label: 'My First dataset',
+    //             backgroundColor: 'rgb(255, 99, 132)',
+    //             borderColor: 'rgb(255, 99, 132)',
+    //             data: [daysWorkedOut, daysMuscleSore, daysMuscleSore]
+    //         }]
+    //     },
+
+    //     // Configuration options go here
+    //     options: {}
+    // });
+
 });
+
+
+
 
