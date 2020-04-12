@@ -58,6 +58,8 @@
                     placeholder="Enter Weight">
                 <button type="submit" class="btn btn-primary submit-button">Submit</button>
         </form>
+
+        <div id="qotd"></div>
     </div>
 
     <!-- Bootstrap link-->
@@ -335,13 +337,13 @@
 
         function isNumeric(n) {
             return !isNaN(parseFloat(n)) && isFinite(n);
-            }
-// above isNumeric function taken from https://rosettacode.org/wiki/Determine_if_a_string_is_numeric#JavaScript
+        }
+        // above isNumeric function taken from https://rosettacode.org/wiki/Determine_if_a_string_is_numeric#JavaScript
 
-        $("#input-weight").keypress(function (){
+        $("#input-weight").keypress(function () {
             var value = $("#input-weight").val().trim();
 
-            if (isNumeric(value)){
+            if (isNumeric(value)) {
                 // change the box to blue
                 console.log("You're entering a number");
                 $("#input-weight").removeClass("is-invalid").removeClass("form-control");
@@ -354,16 +356,16 @@
                 console.log("You're entering a string");
                 $("#input-weight").removeClass("is-invalid").removeClass("form-control");
                 $("#errordiv").remove();
-                
+
                 $("#input-weight").addClass("is-invalid").addClass("form-control");
-                
+
                 var newDiv = $("<div id='errordiv'>");
-                    newDiv.addClass("invalid-feedback");
-                    newDiv.append("<p>Please enter a valid number</p>");
+                newDiv.addClass("invalid-feedback");
+                newDiv.append("<p>Please enter a valid number</p>");
                 $("#input-weight").parent().append(newDiv);
             }
         });
-           
+
 
         // when the weight is submitted, update the database with the weight and
         // do not override the existing data for the workout selection
@@ -403,10 +405,27 @@
 
 
         });
-        //3. Create search button to search youtube and populate the first youtube video under 10min.
+
+        // INSPIRATIONAL Quote of the day API
 
 
 
+        var quoteURL = "https://quotes.rest/qod?category=inspire";
+
+        console.log(quoteURL);
+
+        $.ajax({
+            url: quoteURL,
+            method: "GET",
+            dataType: "json"
+        }).then(function (response) {
+            var quote = response.contents.quotes[0].quote;
+            $("#qotd").text(quote);
+
+
+
+
+        });
 
 
     </script>
