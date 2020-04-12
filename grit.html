@@ -54,7 +54,7 @@
         <form>
             <div class="form-group">
                 <label for="weight-input">Enter current weight (lbs)</label>
-                <input type="number" class="input-weight" id="input-weight" aria-describedby="enter-weight"
+                <input type="number" class="form-control input-weight" id="input-weight" aria-describedby="enter-weight"
                     placeholder="Enter Weight">
                 <button type="submit" class="btn btn-primary submit-button">Submit</button>
         </form>
@@ -332,6 +332,38 @@
 
             });
         });
+
+        function isNumeric(n) {
+            return !isNaN(parseFloat(n)) && isFinite(n);
+            }
+// above isNumeric function taken from https://rosettacode.org/wiki/Determine_if_a_string_is_numeric#JavaScript
+
+        $("#input-weight").keypress(function (){
+            var value = $("#input-weight").val().trim();
+
+            if (isNumeric(value)){
+                // change the box to blue
+                console.log("You're entering a number");
+                $("#input-weight").removeClass("is-invalid").removeClass("form-control");
+                $("#errordiv").remove();
+            }
+            else {
+                // change the box to red and disable submit button.
+                // if a string is being added, remove the is-invalid class and div and re-add
+                // so that for each keypress a new div with error message doesn't display.
+                console.log("You're entering a string");
+                $("#input-weight").removeClass("is-invalid").removeClass("form-control");
+                $("#errordiv").remove();
+                
+                $("#input-weight").addClass("is-invalid").addClass("form-control");
+                
+                var newDiv = $("<div id='errordiv'>");
+                    newDiv.addClass("invalid-feedback");
+                    newDiv.append("<p>Please enter a valid number</p>");
+                $("#input-weight").parent().append(newDiv);
+            }
+        });
+           
 
         // when the weight is submitted, update the database with the weight and
         // do not override the existing data for the workout selection
