@@ -104,8 +104,8 @@ $("#generate-chart").on("click", function () {
             labels: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
             datasets: [{
                 label: 'Days Worked Out',
-                backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgb(27, 47, 110)',
+                borderColor: 'rgb(27, 47, 110',
                 data: frequencyWO
             }]
         },
@@ -124,8 +124,8 @@ $("#generate-chart").on("click", function () {
             labels: ['Morning', 'Afternoon', 'Evening', 'Late Night'],
             datasets: [{
                 label: 'Time of Day Worked Out',
-                backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgb(60, 62, 66)',
+                borderColor: 'rgb(60, 62, 66)',
                 data: freqTimeOfdayWO
             }]
         },
