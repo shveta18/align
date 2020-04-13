@@ -52,3 +52,17 @@ h2, h3 {
     width: 100%;
     font-size: 1.5em;
 }
+
+.form-group {
+    padding-left: 55px;
+}
+
+
+}
+.form {
+    text-align: left;
+}
+.weathercol {
+    text-align: right;
+    padding-right: 55px;
+}
