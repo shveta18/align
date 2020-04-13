@@ -143,19 +143,19 @@ $("#generate-chart").on("click", function () {
         options: {}
     });
 
-    // var ctx3 = document.getElementById('chart-activity').getContext('2d');
+    // var ctx3 = document.getElementById('chart-weight-trend').getContext('2d');
     // var chartTimeFreq = new Chart(ctx3, {
     //     // The type of chart we want to create  
-    //     type: 'bar',
+    //     type: 'line',
 
     //     // The data for our dataset
     //     data: {
-    //         labels: ['Workout', 'DOMS', 'Lazy'],
+    //         labels: ['Date'],
     //         datasets: [{
-    //             label: 'My First dataset',
+    //             label: 'Weight fluctuation',
     //             backgroundColor: 'rgb(255, 99, 132)',
     //             borderColor: 'rgb(255, 99, 132)',
-    //             data: [daysWorkedOut, daysMuscleSore, daysMuscleSore]
+    //             data: [weight]
     //         }]
     //     },
 
