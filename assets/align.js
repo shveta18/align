@@ -4,16 +4,19 @@ function refreshTime() {
     var dayOfWeek = moment().format('dddd');
     $("#display-todays-date").html(todaysDate);
     $("#display-day-of-week").html(dayOfWeek);
+    console.log("Ran refreshTime function");
 };
 refreshTime();
 
 
-// clear out all selections on the buttons 
+// clear out button selections on page
 function clearSelections() {
-    $("#workout").attr("aria-pressed", "false").removeClass("active");
-    $("#skip-lazy").attr({ 'aria-pressed': "false" }).removeClass("active");
-    $("#skip-musclesoreness").attr("aria-pressed", "false").removeClass("active");
+    $("#workout").attr("aria-pressed", "false").removeClass("active btn-success");
+    $("#skip-lazy").attr({ 'aria-pressed': "false" }).removeClass("active btn-danger");
+    $("#skip-musclesoreness").attr("aria-pressed", "false").removeClass("active btn-primary");
     $("#timeOfDay-buttons").css("display", "none");
+    console.log("Ran clearSelections function");
+    
 };
 
 // clear out all stored data in firebase
@@ -22,10 +25,13 @@ function resetData() {
     clickMuscleSore = false;
     clickLazy = false;
     clickTimeOfDay = "";
+    console.log("ran resetData function");
 };
 
+// clear out time of day button selections on page
 function resetTimeOfDay() {
-    $(".timeOfDay").attr("aria-pressed", "false").removeClass("active");
+    $(".timeOfDay").attr("aria-pressed", "false").removeClass("active btn-info").addClass("inactive btn-outline-info");
+    console.log("Ran resetTimeOfDay function");
 };
 
 var firebaseConfig = {
@@ -51,59 +57,49 @@ var day = $("#display-day-of-week").text(); // grab value of day from what is po
 var clickTimeOfDay = "";
 var weight = 0;
 
-//setInterval(function () { refreshTime() }, 10000);
+
 // grab the existing data from firebase for a particular date
 function pullFromDb() {
-    // check if data exists for the current date
+    // check if data exists for the current date in firebase
     var checkData = firebase.database().ref(date);
 
     checkData.on('value', function(snapshot) {
+        // on page load clear out any button selections on main buttons and time of day buttons
         clearSelections();
         resetTimeOfDay();
+        
         dataReturned = snapshot.val();
 
         if (dataReturned != null) {
-            console.log("Okay something exists for this date");
-
             if (dataReturned.workoutDays === true) {
-                console.log("workout recorded for this date");
-                $("#workout").attr("aria-pressed", "true").addClass("active");
+                $("#workout").attr("aria-pressed", "true").addClass("active btn-success");
                 $("#timeOfDay-buttons").css("display", "block");
 
                 if (dataReturned.timeOfDay != null) {
                     if (dataReturned.timeOfDay === "Morning") {
-                        console.log("Morning was selected");
-                        $("#morning").attr("aria-pressed", "true").addClass("active");
+                        $("#morning").attr("aria-pressed", "true").addClass("active btn-info");
                     }
-
                     else if (dataReturned.timeOfDay === "Afternoon") {
-                        console.log("Afternoon was selected");
-                        $("#afternoon").attr("aria-pressed", "true").addClass("active");
+                        $("#afternoon").attr("aria-pressed", "true").addClass("active btn-info");
                     }
-
                     else if (dataReturned.timeOfDay === "Evening") {
-                        console.log("Evening was selected");
-                        $("#evening").attr("aria-pressed", "true").addClass("active");
+                        $("#evening").attr("aria-pressed", "true").addClass("active btn-info");
                     }
-
                     else {
-                        console.log("Late night was selected");
-                        $("#late-night").attr("aria-pressed", "true").addClass("active");
+                        $("#late-night").attr("aria-pressed", "true").addClass("active btn-info");
                     }
                 }
                 else {
                     console.log("No time of day was selected");
                 }
             }
-
             else if (dataReturned.muscleSoreDays === true) {
                 console.log("muscles sore recorded for this date");
-                $("#skip-musclesoreness").attr("aria-pressed", "true").addClass("active");
+                $("#skip-musclesoreness").attr("aria-pressed", "true").addClass("active btn-primary");
             }
-
             else if (dataReturned.lazyDays === true) {
                 console.log("lazy day recorded for this date");
-                $("#skip-lazy").attr({ 'aria-pressed': "true" }).addClass("active");
+                $("#skip-lazy").attr({ 'aria-pressed': "true" }).addClass("active btn-danger");
             }
             else {
                 console.log("None clicked");
@@ -124,7 +120,7 @@ $(".back-date").on("click", function () {
     function getBackDate() {
         var backDate = currentDate.subtract(1, 'days').format("DD-MMMM-YYYY");
         var backDay = currentDate.format('dddd');
-        console.log("back date: " + backDate);
+        console.log("Ran getBackDate function - back date: " + backDate);
         $("#display-todays-date").html(backDate);
         $("#display-day-of-week").html(backDay);
         date = backDate;
@@ -133,13 +129,14 @@ $(".back-date").on("click", function () {
     getBackDate();
     pullFromDb();
     checkWeightEntry();
+    resetAnalyzeDataButton();
 });
 
 $(".forward-date").on("click", function () {
     function getForwardDate() {
         var forwardDate = currentDate.add(1, 'days').format("DD-MMMM-YYYY");
         var forwardDay = currentDate.format('dddd');
-        console.log("forward date: " + forwardDate);
+        console.log("Ran getForwardDate function - forward date: " + forwardDate);
         $("#display-todays-date").html(forwardDate);
         $("#display-day-of-week").html(forwardDay);
         date = forwardDate;
@@ -148,11 +145,12 @@ $(".forward-date").on("click", function () {
     getForwardDate();
     pullFromDb();
     checkWeightEntry();
+    resetAnalyzeDataButton();
 });
 
-// function to check if weight exists
-// if yes, then store this value in a var and push to db
-
+// function to check if weight exists in firebase
+// if yes, then store this value in the weight var to display on text field on page
+// if no, then display empty field on page load
 function checkWeightEntry() {
     var checkData = firebase.database().ref(date);
     checkData.on('value', function (snapshot) {
@@ -161,15 +159,13 @@ function checkWeightEntry() {
             var weightReturned = parseFloat(dataReturned.weight);
             if (weightReturned > 0.0) {
                 weight = weightReturned;
-                console.log("weight exists for today already: " + weight);
                 $("#input-weight").val(weight);
             }
             else {
                 $("#input-weight").val("");
             }
-
         } catch (error) {
-            console.log("No weight key in the db exists");
+            console.log("ERROR: No weight key in the db exists");
             $("#input-weight").val("");
         }
     });
@@ -182,24 +178,46 @@ $("#workout").on("click", function () {
     resetData();
     clearSelections();
     checkWeightEntry();
+    
     clickWorkout = true;
     $("#timeOfDay-buttons").css("display", "block");
+    
 
-    $(".timeOfDay").on("click", function () {
-        resetTimeOfDay();
-        clickTimeOfDay = $(this).val();
+//    $(".timeOfDay").on("click", function () {
+//         // get which button was clicked and store in var
+        
+//         clickTimeOfDay = $(this).val();
+//         $(this).addClass("active btn-info").removeClass("inactive btn-outline-info");
+//         console.log("The time of day clicked is: " + clickTimeOfDay);
+        
 
-        firebase.database().ref(date).set({
-            workoutDays: clickWorkout,
-            muscleSoreDays: clickMuscleSore,
-            lazyDays: clickLazy,
-            timeOfDay: clickTimeOfDay,
-            weight: weight,
-            day: day
-        });
-    });
+//         firebase.database().ref(date).set({
+//             workoutDays: clickWorkout,
+//             muscleSoreDays: clickMuscleSore,
+//             lazyDays: clickLazy,
+//             timeOfDay: clickTimeOfDay,
+//             weight: weight,
+//             day: day
+//         });
+//     });
 });
 
+$(".timeOfDay").on("click", function () {
+        
+    //resetTimeOfDay();
+    clickWorkout = true;
+    
+    clickTimeOfDay = $(this).val();
+
+    firebase.database().ref(date).set({
+        workoutDays: clickWorkout,
+        muscleSoreDays: clickMuscleSore,
+        lazyDays: clickLazy,
+        timeOfDay: clickTimeOfDay,
+        weight: weight,
+        day: day
+    });
+});
 // click event for muscle sore days
 $("#skip-musclesoreness").on("click", function () {
     resetData();
@@ -230,6 +248,8 @@ $("#skip-lazy").on("click", function () {
     });
 });
 
+
+// If user enters anything other than numbers for weight the box should be red
 // The isNumeric function taken from --
 // https://rosettacode.org/wiki/Determine_if_a_string_is_numeric#JavaScript
 function isNumeric(n) {

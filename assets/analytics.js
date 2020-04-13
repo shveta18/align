@@ -14,29 +14,29 @@ function pullDataForCharts() {
         console.log(dataCharts);
 
         $.each(dataCharts, function (key, value) {
-            console.log(value.day);
-            console.log(value.workoutDays);
+            // console.log(value.day);
+            // console.log(value.workoutDays);
             var dayOfweek = value.day;
             var timeOfDay = value.timeOfDay;
 
             if (value.workoutDays == true) {
                 if (dayOfweek === "Sunday") {
-                    console.log("Print for Sunday");
+                    // console.log("Print for Sunday");
                     var oldCount = frequencyWO[0];
                     frequencyWO[0] = oldCount + 1;
-                    console.log(frequencyWO);
+                    // console.log(frequencyWO);
                 } else if (dayOfweek === "Monday") {
                     var oldCount = frequencyWO[1];
                     frequencyWO[1] = oldCount + 1;
-                    console.log(frequencyWO);
+                    // console.log(frequencyWO);
                 } else if (dayOfweek === "Tuesday") {
                     var oldCount = frequencyWO[2];
                     frequencyWO[2] = oldCount + 1;
-                    console.log(frequencyWO);
+                    // console.log(frequencyWO);
                 } else if (dayOfweek === "Wednesday") {
                     var oldCount = frequencyWO[3];
                     frequencyWO[3] = oldCount + 1;
-                    console.log(frequencyWO);
+                    // console.log(frequencyWO);
                 } else if (dayOfweek === "Thursday") {
                     var oldCount = frequencyWO[4];
                     frequencyWO[4] = oldCount + 1;
@@ -44,20 +44,20 @@ function pullDataForCharts() {
                 } else if (dayOfweek === "Friday") {
                     var oldCount = frequencyWO[5];
                     frequencyWO[5] = oldCount + 1;
-                    console.log(frequencyWO);
+                    // console.log(frequencyWO);
                 } else if (dayOfweek === "Saturday") {
                     var oldCount = frequencyWO[6];
                     frequencyWO[6] = oldCount + 1;
-                    console.log(frequencyWO);
+                    // console.log(frequencyWO);
                 }
-                console.log("workout days recorded");
+                // console.log("workout days recorded");
             }
 
             if (value.workoutDays === true) {
                 if (timeOfDay === "Morning") {
                     var oldCount = freqTimeOfdayWO[0];
                     freqTimeOfdayWO[0] = oldCount + 1;
-                    console.log(freqTimeOfdayWO);
+                    // console.log(freqTimeOfdayWO);
                 } else if (timeOfDay === "Afternoon") {
                     var oldCount = freqTimeOfdayWO[1];
                     freqTimeOfdayWO[1] = oldCount + 1;
@@ -91,8 +91,15 @@ function pullDataForCharts() {
 };
 pullDataForCharts();
 
+function resetAnalyzeDataButton() {
+    $("#generate-chart").attr("aria-pressed", "false").removeClass("active btn-dark");
+    console.log("Ran resetAnalyzeDataButton function");
+};
+resetAnalyzeDataButton();
+
 $("#generate-chart").on("click", function () {
     event.preventDefault();
+    $("#generate-chart").attr("aria-pressed", "true").addClass("active btn-dark")
     console.log("Freq workout: "+ frequencyWO);
     var ctx1 = document.getElementById('chart-day-freq').getContext('2d');
     var chartDayFreq = new Chart(ctx1, {
