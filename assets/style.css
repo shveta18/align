@@ -46,3 +46,12 @@ h2, h3 {
 .submit-button {
     margin: 1em;
 }
+
+#generate-chart {
+    width: 100%;
+    font-size: 1.5em;
+}
+
+#text {
+    margin: 1em;
+}
