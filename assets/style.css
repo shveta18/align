@@ -1,0 +1,48 @@
+body {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+}
+
+h1 {
+    font-family: 'Cinzel', serif;
+    padding: 1em;
+}
+
+h2{
+    font-size: 3em;
+}
+h2, h3 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 100;
+}
+
+#qotd {
+    font-style: italic;
+}
+
+#main-buttons {
+    margin-top: 3em;
+    margin-bottom: 5em;
+}
+
+#main-buttons button {
+    padding: 3em;
+    font-weight: bolder;
+    font-size: 1.5em;
+}
+#main-buttons p {
+    font-size: .75em;
+}
+
+#timeOfDay-buttons {
+    margin-top: 3em;
+    margin-bottom: 5em;
+}
+#timeOfDay-buttons button {
+    padding: 2em;
+    font-weight: 700;
+}
+
+.submit-button {
+    margin: 1em;
+}

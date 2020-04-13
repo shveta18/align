@@ -6,59 +6,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/style.css">
     <title>Align</title>
 </head>
 
 <body>
-    <div class="container">
-        <button class="back-date">Back</button>
-        <div id="display-todays-date"></div>
-        <div id="display-day-of-week"></div>
-        <button class="forward-date">Forward</button>
-    </div>
-
-    <div class="container" id="display-buttons">
-        <button type="button" class="btn btn-primary" id="workout" data-toggle="button" aria-pressed="false"
-            value="workout">Workout</button>
-        <button type="button" class="btn btn-primary" id="skip-musclesoreness" data-toggle="button" aria-pressed="false"
-            value="skip-musclesoreness">Skipped: Muscle Soreness</button>
-        <button type="button" class="btn btn-primary" id="skip-lazy" data-toggle="button" aria-pressed="false"
-            value="skip-lazy">Skipped: Lazy</button>
-    </div>
-
-    <div class="container" id="timeOfDay-buttons" style="display: none;">
-        <button type="button" class="timeOfDay btn btn-primary" id="morning" data-toggle="button" value="Morning"
-            aria-pressed="false">Morning</button>
-        <button type="button" class="timeOfDay btn btn-primary" id="afternoon" data-toggle="button" value="Afternoon"
-            aria-pressed="false">Afternoon</button>
-        <button type="button" class="timeOfDay btn btn-primary" id="evening" data-toggle="button" value="Evening"
-            aria-pressed="false">Evening</button>
-        <button type="button" class="timeOfDay btn btn-primary" id="late-night" data-toggle="button" value="Late Night"
-            aria-pressed="false">Late Night</button>
-    </div>
-
-    <div class="container">Today's Running Forecast: <br></br>
-        <p>General Forecast:<span class="weather" id="weather-desc"></span></p>
-        <p>The temperature outside:<span class="weather" id="temp"></span>&#8451</p>
-        <p>Feels like:<span class="weather" id="temp-feels-like"></span>&#8451</p>
-    </div>
 
     <div class="container">
-        <form>
-            <div class="form-group">
-                <label for="weight-input">Enter current weight (lbs)</label>
-                <input type="number" class="form-control input-weight" id="input-weight" aria-describedby="enter-weight"
-                    placeholder="Enter Weight">
-                <button type="submit" class="btn btn-primary submit-button">Submit</button>
+        <div class="row text-center">
+            <div class="col-lg-12">
+                <h1>Align</h1>
             </div>
-        </form>
 
-        <div id="qotd"></div>
+        </div>
 
-        <div id="chart-button">
-            <button id="generate-chart">Analyze Data</button>
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-lg-3">
+                    <button class="forward-date btn btn-secondary btn-sm">Prev Date</button>
+                </div>
+                <div class="col-lg-6">
+                    <h2 id="display-todays-date"></h2>
+                    <h3 id="display-day-of-week"></h3>
+                    <div id="qotd">Quote: </div>
+                </div>
+                <div class="col-lg-3">
+                    <button class="forward-date btn btn-secondary btn-sm">Next Date</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row text-center" id="main-buttons">
+                <!-- <div  <div class="col-lg-12">
+                   class="container" id="display-buttons">-->
+                <div class="col-lg-4">
+                    <button type="button" class="btn btn-success" id="workout" data-toggle="button" aria-pressed="false"
+                        value="workout">Done</button>
+                        <p>I worked out!</p>
+                </div>
+                <div class="col-lg-4">
+                    <button type="button" class="btn btn-primary" id="skip-musclesoreness" data-toggle="button"
+                        aria-pressed="false" value="skip-musclesoreness">Sore-y</button>
+                        <p>Skipping, too sore :(</p>
+                </div>
+                <div class="col-lg-4">
+                    <button type="button" class="btn btn-danger" id="skip-lazy" data-toggle="button"
+                        aria-pressed="false" value="skip-lazy">I'm Lazy</button>
+                        <p>Skipping, ummm...</p>
+                </div>
+                <!--</div> -->
+            </div>
+        </div>
+
+        <!--<div class="col-lg-12"> -->
+        <div id="timeOfDay-buttons" style="display: none;">
+            <div class="row text-center">
+                <div class="col-lg-3">
+                    <button type="button" class="timeOfDay btn btn-info" id="morning" data-toggle="button"
+                        value="Morning" aria-pressed="false">Morning</button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" class="timeOfDay btn btn-info" id="afternoon" data-toggle="button"
+                        value="Afternoon" aria-pressed="false">Afternoon</button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" class="timeOfDay btn btn-info" id="evening" data-toggle="button"
+                        value="Evening" aria-pressed="false">Evening</button>
+                </div>
+                <div class="col-lg-3">
+                    <button type="button" class="timeOfDay btn btn-info" id="late-night" data-toggle="button"
+                        value="Late Night" aria-pressed="false">Late Night</button>
+                </div>
+            </div>
+
+        </div>
+        <!-- </div>-->
+
+    </div>
+
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-6">
+                <form>
+                    <div class="form-group">
+                        <label for="input-weight">Enter current weight (lbs)</label>
+                        <input type="number" class="form-control input-weight" id="input-weight"
+                            placeholder="Enter Weight">
+                        <button type="submit" class="btn btn-primary submit-button">Submit</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-lg-6">
+                <p>Forecast: <span class="weather" id="weather-desc"></span></p>
+                <p><span class="weather" id="temp"></span>&#8451; (Feels like <span class="weather"
+                        id="temp-feels-like"></span>&#8451;)</p>
+            </div>
         </div>
     </div>
+
+
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-12">
+                <div id="chart-button">
+                    <button id="generate-chart">Analyze Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
     <!-- Bootstrap link-->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -80,18 +144,23 @@
     <script src="https://www.gstatic.com/firebasejs/7.13.2/firebase-database.js"></script>
 
     <!-- Link to charts.js-->
-    <canvas id="chart-day-freq"></canvas>
-    <canvas id="chart-date-freq"></canvas>
-    <canvas id="chart-activity"></canvas>
+
+    <div class="container">
+        <canvas id="chart-day-freq"></canvas>
+        <canvas id="chart-date-freq"></canvas>
+        <canvas id="chart-activity"></canvas>
+
+    </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-
-
-
     <!-- Link to javascript file-->
     <script src="assets/grit.js"></script>
-   <script src="assets/analytics.js"></script>
-    
+    <script src="assets/analytics.js"></script>
 
+
+
+    </div>
 
 </body>
 
