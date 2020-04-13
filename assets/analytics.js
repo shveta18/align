@@ -94,12 +94,14 @@ pullDataForCharts();
 function resetAnalyzeDataButton() {
     $("#generate-chart").attr("aria-pressed", "false").removeClass("active btn-dark");
     console.log("Ran resetAnalyzeDataButton function");
+    $(".charts").css("display", "none");
 };
 resetAnalyzeDataButton();
 
 $("#generate-chart").on("click", function () {
     event.preventDefault();
-    $("#generate-chart").attr("aria-pressed", "true").addClass("active btn-dark")
+    $("#generate-chart").attr("aria-pressed", "true").addClass("active btn-dark");
+    $(".charts").css("display", "block");
     console.log("Freq workout: "+ frequencyWO);
     var ctx1 = document.getElementById('chart-day-freq').getContext('2d');
     var chartDayFreq = new Chart(ctx1, {
