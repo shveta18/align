@@ -4,5 +4,5 @@ Lets the user track their workouts and missed days. The user may view charts to 
 
 Knowing this will help the user plan their life around their behavioral patterns to ensure they stay on track and don't commit to lofty goals. 
 
-# Note: The data is stored in Firebase (Free version)
+### Note: The data is stored in Firebase (Free version)
 
